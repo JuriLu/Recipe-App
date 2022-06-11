@@ -1,0 +1,109 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+.mt-2{
+  margin-top: 2rem;
+}
+
+.ml-2{
+  margin-left: 2rem;
+}
+
+.mr-2{
+  margin-right: 2rem;
+}
+
+.mb-2{
+  margin-bottom: 2rem;
+}
+
+.mt-4{
+  margin-top: 4rem;
+}
+
+.ml-4{
+  margin-left: 4rem;
+}
+
+.mr-4{
+  margin-right: 4rem;
+}
+
+.mb-4{
+  margin-bottom: 4rem;
+}
+
+.mt-2p{
+  margin-top: 2px;
+}
+
+.ml-2p{
+  margin-left: 2px;
+}
+
+.mr-2p{
+  margin-right: 2px;
+}
+
+.mb-2p{
+  margin-bottom: 2px;
+}
+
+.mt-4p{
+  margin-top: 4px;
+}
+
+.ml-4p{
+  margin-left: 4px;
+}
+
+.mr-4p{
+  margin-right: 4px;
+}
+
+.mb-4p{
+  margin-bottom: 4px;
+}
+
+.mt-8p{
+  margin-top: 8px;
+}
+
+.ml-8p{
+  margin-left: 8px;
+}
+
+.mr-8p{
+  margin-right: 8px;
+}
+
+.mb-8p{
+  margin-bottom: 8px;
+}
+
+
+
+.gradient__bg{
+  /* ff 3.6+ */
+  background:-moz-radial-gradient(circle at 50% 50%, rgba(255, 255, 0, 1) 0%, rgba(238, 130, 238, 1) 100%);
+
+  /* safari 5.1+,chrome 10+ */
+  background:-webkit-radial-gradient(circle at 50% 50%, rgba(255, 255, 0, 1) 0%, rgba(238, 130, 238, 1) 100%);
+
+  /* opera 11.10+ */
+  background:-o-radial-gradient(circle at 50% 50%, rgba(255, 255, 0, 1) 0%, rgba(238, 130, 238, 1) 100%);
+
+  /* ie 10+ */
+  background:-ms-radial-gradient(circle at 50% 50%, rgba(255, 255, 0, 1) 0%, rgba(238, 130, 238, 1) 100%);
+
+  /* global 92%+ browsers support */
+  background:radial-gradient(circle at 50% 50%, rgba(255, 255, 0, 1) 0%, rgba(238, 130, 238, 1) 100%);
+
+}
+
+
+
+
+
+

@@ -1,0 +1,26 @@
+.prime{
+  font-size: 25px;
+  color: Gray;
+  font-family: 'Poppins';
+}
+
+.highlighted{
+  transition: transform .2s; /* Animation */
+  transform: scale(1.15);
+  font-weight: bold;
+  color: #FFFF00;
+}
+
+.zoom:hover {
+  transition: transform .2s; /* Animation */
+  transform: scale(1.15);
+  font-weight: bold;
+  color: #5d5d5d;
+}
+
+.custom_border {
+  border: none
+}
+.custom_bg{
+  background-color:#EE82EE;
+}
