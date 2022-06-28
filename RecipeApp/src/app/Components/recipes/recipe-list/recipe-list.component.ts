@@ -1,10 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {RecipeModel} from "../../Models/recipe.model";
-import {RecipeService} from "../../Services/recipe.service";
+import {RecipeModel} from "../../../Models/recipe.model";
+import {RecipeService} from "../../../Services/recipe.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Subscription} from "rxjs";
-import {DataStorageService} from "../../Services/data-storage.service";
-import {AuthService} from "../../Services/auth.service";
+import {DataStorageService} from "../../../Services/data-storage.service";
 
 @Component({
   selector: 'app-recipe-list',
@@ -34,8 +33,7 @@ export class RecipeListComponent implements OnInit ,OnDestroy{
     this.subscription = this.recipeService.recipesChanged.subscribe(
       (recipes:RecipeModel[]) => {
         this.recipes = recipes
-    }
-    )
+    })
   }
 
   onNewRecipe(){
