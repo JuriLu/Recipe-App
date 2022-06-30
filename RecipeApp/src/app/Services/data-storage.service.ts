@@ -18,7 +18,7 @@ export class DataStorageService {
     const recipes:RecipeModel[] = this.recipeService.getRecipes();
     return this.http.put(
         this.url + this.recipesEndpoint,
-        recipes
+        recipes  //body
       )
   }
 
@@ -34,17 +34,13 @@ export class DataStorageService {
           return {
             ...recipe,
             ingredients: recipe.ingredients ? recipe.ingredients : []
-          }
-        });
-      }),
+          }});
+        }),
       tap(recipes =>{
         this.recipeService.setRecipes(recipes)
       })
     )
-
   }
-
-
 
 
 }
