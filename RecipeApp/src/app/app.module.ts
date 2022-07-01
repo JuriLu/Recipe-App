@@ -18,6 +18,7 @@ import {shoppingListReducer} from "./Components/shopping-list/store/shopping-lis
 import {RecipesModule} from "./Components/recipes/recipes.module";
 import {ShoppingListModule} from "./Components/shopping-list/shopping-list.module";
 import {SharedModule} from "../shared/shared.module";
+import {CoreModule} from "./core/core.module";
 
 
 
@@ -36,14 +37,11 @@ import {SharedModule} from "../shared/shared.module";
     RecipesModule,
     ShoppingListModule,
     SharedModule,
+    CoreModule,
     StoreModule.forRoot({shoppingList:shoppingListReducer})
   ],
-  providers: [RecipeService,ShoppingListService,DataStorageService,
-    {
-      provide:HTTP_INTERCEPTORS,
-      useClass:AuthInterceptor,
-      multi:true
-    }
+  providers: [
+
   ],
   bootstrap: [AppComponent]
 })
