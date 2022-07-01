@@ -7,8 +7,6 @@ import {ShoppingListComponent} from "./Components/shopping-list/shopping-list.co
 
 const appRoutes:Routes = [
   {path:'' , redirectTo:'auth',pathMatch:'full'},
-
-  {path:'auth' , component:AuthComponent}
 ]
 
 

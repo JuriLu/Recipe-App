@@ -19,25 +19,23 @@ import {RecipesModule} from "./Components/recipes/recipes.module";
 import {ShoppingListModule} from "./Components/shopping-list/shopping-list.module";
 import {SharedModule} from "../shared/shared.module";
 import {CoreModule} from "./core/core.module";
+import {AuthModule} from "./auth/auth.module";
 
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    AuthComponent,
-    HeaderComponent,
   ],
   imports: [
-    FormsModule,
-    BrowserModule,
-    HttpClientModule,
-    AppRoutingModule,
-    ReactiveFormsModule,
-    RecipesModule,
-    ShoppingListModule,
-    SharedModule,
+    AuthModule,
     CoreModule,
+    SharedModule,
+    RecipesModule,
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    ShoppingListModule,
     StoreModule.forRoot({shoppingList:shoppingListReducer})
   ],
   providers: [
