@@ -1,46 +1,33 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, ReactiveFormsModule} from "@angular/forms";
-
-import { AppComponent } from './app.component';
-import { AuthComponent } from './auth/auth.component';
-import { HeaderComponent } from '../shared/header/header.component';
-
-import { RecipeService } from "./Services/recipe.service";
-import { AuthInterceptor } from "./auth/auth.interceptor";
-import { AppRoutingModule } from "./app-routing.module";
-import { DataStorageService } from "./Services/data-storage.service";
-import { ShoppingListService } from "./Services/shopping-list.service";
-import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
-
-import { StoreModule } from '@ngrx/store';
-import {shoppingListReducer} from "./Components/shopping-list/store/shopping-list.reducer";
-import {RecipesModule} from "./Components/recipes/recipes.module";
-import {ShoppingListModule} from "./Components/shopping-list/shopping-list.module";
-import {SharedModule} from "../shared/shared.module";
+import {NgModule} from '@angular/core';
 import {CoreModule} from "./core/core.module";
-import {AuthModule} from "./auth/auth.module";
-
+import {StoreModule} from '@ngrx/store';
+import {AppComponent} from './app.component';
+import {SharedModule} from "../shared/shared.module";
+import {BrowserModule} from '@angular/platform-browser';
+import {AppRoutingModule} from "./app-routing.module";
+import {HttpClientModule} from "@angular/common/http";
+import {shoppingListReducer} from "./Components/shopping-list/store/shopping-list.reducer";
+import {HeaderComponent} from "../shared/header/header.component";
 
 
 @NgModule({
   declarations: [
     AppComponent,
+    HeaderComponent
   ],
   imports: [
-    AuthModule,
+    // AuthModule,   //Lazy Loading
+    // RecipesModule,   //removed because it is implemented as lazy loading
+    // ShoppingListModule,  // Lazy Loading
     CoreModule,
     SharedModule,
-    RecipesModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ShoppingListModule,
-    StoreModule.forRoot({shoppingList:shoppingListReducer})
+    StoreModule.forRoot({shoppingList: shoppingListReducer})
   ],
-  providers: [
-
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
