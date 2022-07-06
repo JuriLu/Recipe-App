@@ -1,4 +1,4 @@
-export type SHLATypes = AddIngredient | AddIngredients
+export type SHLATypes = AddIngredient | AddIngredients  //shopping list action types
 
 import {Action} from "@ngrx/store";
 import {IngredientModel} from "../../../Models/ingredient.model";

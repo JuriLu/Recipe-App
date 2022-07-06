@@ -134,10 +134,10 @@ export class AuthService {
         errorMessage = 'This email Already Exists';
         break;
       case 'EMAIL_NOT_FOUND':
-        errorMessage = 'User Not Created';
+        errorMessage = 'This user is not created';
         break;
       case 'INVALID_PASSWORD':
-        errorMessage = 'Password Incorrect';
+        errorMessage = 'This password is not correct';
         break;
     }
     return throwError(errorMessage)
