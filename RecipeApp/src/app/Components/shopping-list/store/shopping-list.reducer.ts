@@ -11,18 +11,43 @@ const initialState = {
 export function shoppingListReducer(
   state = initialState,
   action: ShoppingListActions.SHLATypes
-  ){
+) {
   switch (action.type) {
+
     case ShoppingListActions.ADD_INGREDIENT:
       return {
         ...state,
         ingredients: [...state.ingredients, action.payload]
       };
-    case ShoppingListActions.ADD_INGREDENTS:
+
+    case ShoppingListActions.ADD_INGREDIENTS:
       return {
         ...state,
-        ingredients: [...state.ingredients,...action.payload]   // ...action.payload because we want to add the elements of the array no the whole array
+        ingredients: [...state.ingredients, ...action.payload]   // ...action.payload because we want to add the elements of the array no the whole array
+      };
+
+    case ShoppingListActions.UPDATE_INGREDIENT:
+      const ingredient = state.ingredients[action.payload.index] // this is the ingredient we want to edit
+      const updatedIngredient = {
+        ...ingredient,
+        ...action.payload.ingredient
       }
+      const updatedIngredients = [...state.ingredients];
+      updatedIngredients[action.payload.index] = updatedIngredient
+
+      return {
+        ...state,
+        ingredients: updatedIngredients
+      };
+
+    case ShoppingListActions.DELETE_INGREDIENT:
+      return {
+        ...state,
+        ingredients: state.ingredients.filter((ig,igIndex) => {    //filter function return a new array of its elements if the condition returns true
+            return igIndex !== action.payload;                                            //The condition
+        })
+      };
+
     default:
       return state;
   }

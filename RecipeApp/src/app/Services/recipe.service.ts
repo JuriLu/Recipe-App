@@ -32,7 +32,7 @@ export class RecipeService {
 
   addIngToSl(ingredients: IngredientModel[]) {
     // this.slService.addIngredients(ingredients)
-    this.store.dispatch(new ShoppingListActions.AddIngredients(ingredients))
+    this.store.dispatch(new ShoppingListActions.AddIngredients(ingredients)) //NgRx
   }
 
 
