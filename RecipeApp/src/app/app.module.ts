@@ -6,9 +6,8 @@ import {SharedModule} from "./shared/shared.module";
 import {BrowserModule} from '@angular/platform-browser';
 import {AppRoutingModule} from "./app-routing.module";
 import {HttpClientModule} from "@angular/common/http";
-import {shoppingListReducer} from "./Components/shopping-list/store/shopping-list.reducer";
 import {HeaderComponent} from "./shared/header/header.component";
-import { AlertComponent } from './shared/alert/alert.component';
+import * as fromAppReducer from "./store/app.reducer"
 
 
 @NgModule({
@@ -22,7 +21,7 @@ import { AlertComponent } from './shared/alert/alert.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    StoreModule.forRoot({shoppingList: shoppingListReducer})
+    StoreModule.forRoot(fromAppReducer.appReducer)
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,9 +1,6 @@
 import {IngredientModel} from "../../../Models/ingredient.model";
 import * as ShoppingListActions from "./shopping-list.actions";
 
-export interface AppState {
-  shoppingList: SLState
-}
 
 export interface SLState {
   ingredients: IngredientModel[];
