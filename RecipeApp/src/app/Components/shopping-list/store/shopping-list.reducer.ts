@@ -1,15 +1,23 @@
 import {IngredientModel} from "../../../Models/ingredient.model";
 import * as ShoppingListActions from "./shopping-list.actions";
 
-const initialState = {
+export interface State {
+  ingredients: IngredientModel[];
+  editedIngredient: IngredientModel;
+  editedIngredientIndex: number
+}
+
+const initialState: State = {
   ingredients: [
     new IngredientModel('Apples', 5),
     new IngredientModel('Pomodorini', 50),
-  ]
+  ],
+  editedIngredient: null,
+  editedIngredientIndex: -1
 }
 
 export function shoppingListReducer(
-  state = initialState,
+  state: State = initialState,
   action: ShoppingListActions.SHLATypes
 ) {
   switch (action.type) {
@@ -43,8 +51,8 @@ export function shoppingListReducer(
     case ShoppingListActions.DELETE_INGREDIENT:
       return {
         ...state,
-        ingredients: state.ingredients.filter((ig,igIndex) => {    //filter function return a new array of its elements if the condition returns true
-            return igIndex !== action.payload;                                            //The condition
+        ingredients: state.ingredients.filter((ig, igIndex) => {    //filter function return a new array of its elements if the condition returns true
+          return igIndex !== action.payload;                                            //The condition
         })
       };
 
