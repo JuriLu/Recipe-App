@@ -1,13 +1,17 @@
 import {IngredientModel} from "../../../Models/ingredient.model";
 import * as ShoppingListActions from "./shopping-list.actions";
 
-export interface State {
+export interface AppState {
+  shoppingList:SLState
+}
+
+export interface SLState {
   ingredients: IngredientModel[];
   editedIngredient: IngredientModel;
   editedIngredientIndex: number
 }
 
-const initialState: State = {
+const initialState: SLState = {
   ingredients: [
     new IngredientModel('Apples', 5),
     new IngredientModel('Pomodorini', 50),
@@ -17,7 +21,7 @@ const initialState: State = {
 }
 
 export function shoppingListReducer(
-  state: State = initialState,
+  state: SLState = initialState,
   action: ShoppingListActions.SHLATypes
 ) {
   switch (action.type) {
