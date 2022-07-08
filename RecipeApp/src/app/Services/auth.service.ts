@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import {Store} from "@ngrx/store";
 import * as fromAppReducer from "../store/app.reducer"
 import * as AuthActions from "../auth/store/auth.actions";
+import {environment} from "../../environments/environment";
 
 export interface AuthResponseData {
   idToken: string,
@@ -22,8 +23,7 @@ export interface AuthResponseData {
 export class AuthService {
   user = new BehaviorSubject<User>(null)
 
-  signUpUrl: string = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDQOIHYCX0homh4OBJk1ZBnsxNiGbTMVBc'
-  signInUrl: string = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDQOIHYCX0homh4OBJk1ZBnsxNiGbTMVBc'
+
 
   private tokenExpTimer: any;
 
@@ -37,7 +37,7 @@ export class AuthService {
 
   signup(email: string, password: string): Observable<any> {
     return this.http.post<AuthResponseData>(
-      this.signUpUrl,
+      environment.signUpUrl,
       {
         email: email,
         password: password,
@@ -57,7 +57,7 @@ export class AuthService {
 
   login(email: string, password: string) {
     return this.http.post<AuthResponseData>(
-      this.signInUrl,
+      environment.signInUrl,
       {
         email: email,
         password: password,
