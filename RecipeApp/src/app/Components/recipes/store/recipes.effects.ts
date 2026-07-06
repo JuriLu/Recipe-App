@@ -6,13 +6,14 @@ import { catchError, map, mergeMap, of, tap } from 'rxjs';
 import * as RecipeActions from './recipes.actions';
 import { RecipeModel } from '../../../Models/recipe.model';
 import { ToastService } from '../../../Services/toast.service';
+import { environment } from '../../../../environments/environment';
 
 @Injectable()
 export class RecipesEffects {
   private readonly actions$ = inject(Actions);
   private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastService);
-  private readonly baseUrl = 'http://localhost:3000/recipes';
+  private readonly baseUrl = `${environment.apiBaseUrl}/recipes`;
 
   fetchRecipes$ = createEffect(() =>
     this.actions$.pipe(

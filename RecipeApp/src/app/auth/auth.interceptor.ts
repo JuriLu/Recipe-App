@@ -3,10 +3,11 @@ import { inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { exhaustMap, map, take } from 'rxjs';
 import * as fromAppReducer from '../store/app.reducer';
+import { environment } from '../../environments/environment';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   // Do not append auth token for local json-server requests
-  if (req.url.includes('localhost:3000')) {
+  if (req.url.includes(environment.apiBaseUrl)) {
     return next(req);
   }
 
