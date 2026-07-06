@@ -1,17 +1,29 @@
-.gradient__bg{
-  /* ff 3.6+ */
-  background:-moz-radial-gradient(circle at 50% 50%, rgba(255, 255, 0, 1) 0%, rgba(238, 130, 238, 1) 100%);
+.recipes-layout-grid {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: var(--fib-55);
+  align-items: start;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
-  /* safari 5.1+,chrome 10+ */
-  background:-webkit-radial-gradient(circle at 50% 50%, rgba(255, 255, 0, 1) 0%, rgba(238, 130, 238, 1) 100%);
+.recipes-detail-container {
+  min-width: 0;
+}
 
-  /* opera 11.10+ */
-  background:-o-radial-gradient(circle at 50% 50%, rgba(255, 255, 0, 1) 0%, rgba(238, 130, 238, 1) 100%);
+.recipes-list-sidebar {
+  display: flex;
+  flex-direction: column;
+}
 
-  /* ie 10+ */
-  background:-ms-radial-gradient(circle at 50% 50%, rgba(255, 255, 0, 1) 0%, rgba(238, 130, 238, 1) 100%);
-
-  /* global 92%+ browsers support */
-  background:radial-gradient(circle at 50% 50%, rgba(255, 255, 0, 1) 0%, rgba(238, 130, 238, 1) 100%);
-
+@media (max-width: 992px) {
+  .recipes-layout-grid {
+    grid-template-columns: 1fr;
+    gap: var(--fib-34);
+  }
+  
+  .recipes-list-sidebar {
+    order: -1;
+  }
 }

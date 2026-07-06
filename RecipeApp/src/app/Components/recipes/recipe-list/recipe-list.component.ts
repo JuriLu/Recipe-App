@@ -8,6 +8,7 @@ import { RecipeItemComponent } from './recipe-item/recipe-item.component';
   standalone: true,
   selector: 'app-recipe-list',
   templateUrl: './recipe-list.component.html',
+  styleUrls: ['./recipe-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RecipeItemComponent],
 })

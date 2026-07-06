@@ -26,15 +26,16 @@
 }
 
 .brand-logo {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--fib-5);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+  width: 110px;
+  height: 110px;
+  border-radius: var(--fib-8);
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.2);
+  object-fit: cover;
 }
 
 .brand-title {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 24px;
+  font-weight: 800;
   background: var(--gradient-brand);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

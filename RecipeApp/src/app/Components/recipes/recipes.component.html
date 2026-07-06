@@ -1,8 +1,9 @@
-<div class="row">
-  <div class="col-md-5">
+<div class="recipes-layout-grid">
+  <main class="recipes-detail-container">
+    <router-outlet></router-outlet>
+  </main>
+  
+  <aside class="recipes-list-sidebar">
     <app-recipe-list></app-recipe-list>
-  </div>
-  <div class="col-md-7">
-  <router-outlet></router-outlet>
-  </div>
+  </aside>
 </div>

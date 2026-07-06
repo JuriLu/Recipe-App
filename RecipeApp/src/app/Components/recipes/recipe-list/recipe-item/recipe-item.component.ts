@@ -11,6 +11,7 @@ import { RecipeModel } from '../../../../Models/recipe.model';
   standalone: true,
   selector: 'app-recipe-item',
   templateUrl: './recipe-item.component.html',
+  styleUrls: ['./recipe-item.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, RouterLinkActive],
 })

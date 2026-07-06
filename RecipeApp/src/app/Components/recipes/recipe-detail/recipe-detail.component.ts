@@ -14,6 +14,7 @@ import { DropdownDirective } from '../../../shared/dropdown.directive';
   standalone: true,
   selector: 'app-recipe-detail',
   templateUrl: './recipe-detail.component.html',
+  styleUrls: ['./recipe-detail.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DropdownDirective],
 })

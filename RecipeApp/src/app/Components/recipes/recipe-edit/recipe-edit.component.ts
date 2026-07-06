@@ -20,6 +20,7 @@ import { RecipeService } from '../../../Services/recipe.service';
   standalone: true,
   selector: 'app-recipe-edit',
   templateUrl: './recipe-edit.component.html',
+  styleUrls: ['./recipe-edit.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule],
 })

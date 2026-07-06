@@ -20,6 +20,7 @@ import { DropdownDirective } from '../dropdown.directive';
   standalone: true,
   selector: 'app-header',
   templateUrl: './header.component.html',
+  styleUrls: ['./header.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, RouterLinkActive, DropdownDirective],
 })
