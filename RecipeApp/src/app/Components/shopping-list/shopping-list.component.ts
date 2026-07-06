@@ -17,6 +17,6 @@ export class ShoppingListComponent {
   readonly shoppingList = this.store.selectSignal(state => state.shoppingList);
 
   onEditItem(index: number): void {
-    this.store.dispatch(new ShoppingListActions.StartEdit(index));
+    this.store.dispatch(ShoppingListActions.startEdit({ payload: index }));
   }
 }

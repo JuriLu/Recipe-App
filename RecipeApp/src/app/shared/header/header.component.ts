@@ -1,20 +1,11 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  OnInit,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { AuthService } from '../../Services/auth.service';
-import { RecipeService } from '../../Services/recipe.service';
 import { AppState } from '../../store/app.reducer';
-
 
 @Component({
   standalone: true,
@@ -24,29 +15,19 @@ import { AppState } from '../../store/app.reducer';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, RouterLinkActive],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
   readonly collapsed = signal(true);
-  readonly isAuthenticated = signal(false);
 
-  private readonly destroyRef = inject(DestroyRef);
+  private readonly store = inject(Store<AppState>);
+  private readonly authService = inject(AuthService);
 
-  constructor(
-    private authService: AuthService,
-    private recipeService: RecipeService,
-    private store: Store<AppState>,
-  ) {}
+  // toSignal() replaces manual subscribe + takeUntilDestroyed — automatically cleaned up
+  private readonly authUser = toSignal(
+    this.store.select('auth').pipe(map((s) => s.user)),
+    { initialValue: null }
+  );
 
-  ngOnInit(): void {
-    this.store
-      .select('auth')
-      .pipe(
-        map((authState) => authState.user),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe((user) => {
-        this.isAuthenticated.set(!!user);
-      });
-  }
+  readonly isAuthenticated = computed(() => !!this.authUser());
 
   onLogout(): void {
     this.authService.logout();

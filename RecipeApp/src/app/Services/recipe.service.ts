@@ -57,6 +57,6 @@ export class RecipeService {
   }
 
   addIngToSl(ingredients: IngredientModel[]): void {
-    this.store.dispatch(new ShoppingListActions.AddIngredients(ingredients));
+    this.store.dispatch(ShoppingListActions.addIngredients({ payload: ingredients }));
   }
 }

@@ -1,92 +1,85 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from "@angular/common/http";
-import {BehaviorSubject, catchError, Observable, tap, throwError} from "rxjs";
-import {User} from "../Models/user.model";
-import {Router} from "@angular/router";
-import {Store} from "@ngrx/store";
-import * as fromAppReducer from "../store/app.reducer"
-import * as AuthActions from "../auth/store/auth.actions";
-import {environment} from "../../environments/environment";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { catchError, Observable, tap, throwError } from 'rxjs';
+import { User } from '../Models/user.model';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import * as fromAppReducer from '../store/app.reducer';
+import * as AuthActions from '../auth/store/auth.actions';
+import { environment } from '../../environments/environment';
 
 export interface AuthResponseData {
-  idToken: string,
-  email: string,
-  refreshToken: string,
-  expiresIn: string,
-  localId: string,
-  registered?: boolean
+  idToken: string;
+  email: string;
+  refreshToken: string;
+  expiresIn: string;
+  localId: string;
+  registered?: boolean;
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-  user = new BehaviorSubject<User>(null)
-
-
-
-  private tokenExpTimer: any;
+  private tokenExpTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     private http: HttpClient,
     private router: Router,
     private store: Store<fromAppReducer.AppState>
-  ) {
-  }
+  ) {}
 
-
-  signup(email: string, password: string): Observable<any> {
-    return this.http.post<AuthResponseData>(
-      environment.signUpUrl,
-      {
-        email: email,
-        password: password,
-        returnSecureToken: true
+  signup(email: string, password: string): Observable<AuthResponseData> {
+    return this.http
+      .post<AuthResponseData>(environment.signUpUrl, {
+        email,
+        password,
+        returnSecureToken: true,
       })
-      .pipe(catchError(this.handelError),
-        tap(resData => {
+      .pipe(
+        catchError(this.handleError),
+        tap((resData) => {
           this.handleAuthentication(
             resData.email,
             resData.localId,
             resData.idToken,
-            +resData.expiresIn)
+            +resData.expiresIn
+          );
         })
       );
   }
 
-
-  login(email: string, password: string) {
-    return this.http.post<AuthResponseData>(
-      environment.signInUrl,
-      {
-        email: email,
-        password: password,
-        returnSecureToken: true
+  login(email: string, password: string): Observable<AuthResponseData> {
+    return this.http
+      .post<AuthResponseData>(environment.signInUrl, {
+        email,
+        password,
+        returnSecureToken: true,
       })
-      .pipe(catchError(this.handelError),
-        tap(resData => {
+      .pipe(
+        catchError(this.handleError),
+        tap((resData) => {
           this.handleAuthentication(
             resData.email,
             resData.localId,
             resData.idToken,
-            +resData.expiresIn)
+            +resData.expiresIn
+          );
         })
-      )
+      );
   }
 
-  //automatically logins the user even when the page is refreshed, by getting the data of the user stored in the localstorage,
-  //creating a new loaded user and authentication this user if it has a token or not
+  /** Restores user session from localStorage on page refresh */
+  autoLogin(): void {
+    const rawData = localStorage.getItem('userData');
+    if (!rawData) return;
 
-  autoLogin() {
     const userData: {
       email: string;
       id: string;
       _token: string;
       _tokenExpirationDate: string;
-    } = JSON.parse(localStorage.getItem('userData'))
-    if (!userData) {
-      return;
-    }
+    } = JSON.parse(rawData);
 
     const loadedUser = new User(
       userData.email,
@@ -96,104 +89,81 @@ export class AuthService {
     );
 
     if (loadedUser.token) {
-      // this.user.next(loadedUser)
-      this.store.dispatch(new AuthActions.Login({     //NgRx
-        email: loadedUser.email,
-        userId: loadedUser.id,
-        token: loadedUser.token,
-        expirationDate: new Date(userData._tokenExpirationDate)
-      }))
-      const expirationDuration = new Date(userData._tokenExpirationDate).getTime() - new Date().getTime() // the difference in milliseconds,time till token expires
-      this.autoLogout(expirationDuration)
+      this.store.dispatch(
+        AuthActions.login({
+          email: loadedUser.email,
+          userId: loadedUser.id,
+          token: loadedUser.token,
+          expirationDate: new Date(userData._tokenExpirationDate),
+        })
+      );
+      const expirationDuration =
+        new Date(userData._tokenExpirationDate).getTime() - new Date().getTime();
+      this.autoLogout(expirationDuration);
     }
   }
 
-
-  logout() {
-    // this.user.next(null);
-    this.store.dispatch(new AuthActions.Logout())   //NgRx
+  logout(): void {
+    this.store.dispatch(AuthActions.logout());
     this.router.navigate(['/auth']);
     localStorage.removeItem('userData');
 
     if (this.tokenExpTimer) {
-      clearTimeout(this.tokenExpTimer)
+      clearTimeout(this.tokenExpTimer);
+      this.tokenExpTimer = null;
     }
-
-    this.tokenExpTimer = null;
   }
 
-  //automatically logouts the user when the token expires
-  //Logicaly we use this function (start the timer),every time we EMIT a USER
-
-  autoLogout(expirationDuration: number) {
-    // we must stop the setTimeout when we manually click the logout button,by storing in a variable and clearing in the logout function
+  /** Starts auto-logout timer that fires when the token expires */
+  autoLogout(expirationDuration: number): void {
     this.tokenExpTimer = setTimeout(() => {
-      this.logout()
-    }, expirationDuration);  // set expirationDuration to 3000 or whatever number to simulate a shorter token expiration
-
+      this.logout();
+    }, expirationDuration);
   }
 
-  updatePassword(idToken: string, newPassword: string): Observable<any> {
-    return this.http.post<any>(
-      `https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDQOIHYCX0homh4OBJk1ZBnsxNiGbTMVBc`,
-      {
-        idToken: idToken,
-        password: newPassword,
-        returnSecureToken: true
-      }
-    ).pipe(
-      catchError(this.handelError.bind(this))
-    );
+  updatePassword(idToken: string, newPassword: string): Observable<unknown> {
+    return this.http
+      .post<unknown>(
+        `https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDQOIHYCX0homh4OBJk1ZBnsxNiGbTMVBc`,
+        { idToken, password: newPassword, returnSecureToken: true }
+      )
+      .pipe(catchError(this.handleError));
   }
 
+  private handleError(errorRes: HttpErrorResponse): Observable<never> {
+    let errorMessage = 'Unknown Error Occurred';
 
-  private handelError(errorRes: HttpErrorResponse) {
-    let errorMessage = 'Unknown Error Ocurred'
-
-    if (!errorRes.error || !errorRes.error.error) {
-      return throwError(errorMessage)
+    if (!errorRes.error?.error) {
+      return throwError(() => errorMessage);
     }
+
     switch (errorRes.error.error.message) {
       case 'EMAIL_EXISTS':
-        errorMessage = 'This email Already Exists';
+        errorMessage = 'This email already exists';
         break;
       case 'EMAIL_NOT_FOUND':
-        errorMessage = 'This user is not created';
+        errorMessage = 'This user does not exist';
         break;
       case 'INVALID_PASSWORD':
-        errorMessage = 'This password is not correct';
+        errorMessage = 'Incorrect password';
         break;
     }
-    return throwError(errorMessage)
+    return throwError(() => errorMessage);
   }
-
 
   private handleAuthentication(
     email: string,
     localId: string,
     idToken: string,
     expiresIn: number
-  ) {
+  ): void {
+    const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
+    const user = new User(email, localId, idToken, expirationDate);
 
-    //(the first new Date wraps everything in Date object format)
-    // create the expiration date with new Date and we get the time
-    // in miliseconds and add the expiration Time also in miliseconds
-    // * 1000 to convert in seconds
-    const expirationDate = new Date(new Date().getTime() + expiresIn * 1000)
-    // console.log(expirationDate)
-    const user = new User(
-      email,
-      localId,
-      idToken,
-      expirationDate
+    this.store.dispatch(
+      AuthActions.login({ email, userId: localId, token: idToken, expirationDate })
     );
-
-    // this.user.next(user)
-    this.store.dispatch(new AuthActions.Login({email,userId:localId,token:idToken,expirationDate}))
-    this.autoLogout(expiresIn * 1000)  // in milliseconds
-    //Save the user in local storage in order to save it from refresh
-    localStorage.setItem('userData', JSON.stringify(user))
+    this.autoLogout(expiresIn * 1000);
+    localStorage.setItem('userData', JSON.stringify(user));
   }
-
-
 }

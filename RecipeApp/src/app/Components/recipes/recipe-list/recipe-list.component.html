@@ -10,15 +10,31 @@
   </div>
 
   <div class="recipe-list-container" role="list" aria-label="Recipes" i18n-aria-label="@@recipeListAriaLabel">
-    @for (recipeEl of recipes(); track recipeEl.name; let i = $index) {
-      <app-recipe-item
-        [recipe]="recipeEl"
-        [index]="i">
-      </app-recipe-item>
-    } @empty {
-      <div class="empty-list glass-panel">
-        <p i18n="@@recipeListEmpty">No recipes found. Click "+ New Recipe" to start cooking!</p>
+    @defer (on viewport) {
+      @for (recipeEl of recipes(); track recipeEl.id; let i = $index) {
+        <app-recipe-item
+          [recipe]="recipeEl"
+          [index]="i">
+        </app-recipe-item>
+      } @empty {
+        <div class="empty-list glass-panel">
+          <p i18n="@@recipeListEmpty">No recipes found. Click "+ New Recipe" to start cooking!</p>
+        </div>
+      }
+    } @loading (minimum 200ms) {
+      <div class="recipe-list-skeleton">
+        @for (_ of [1,2,3]; track $index) {
+          <div class="skeleton-card glass-panel">
+            <div class="skeleton-img pulse"></div>
+            <div class="skeleton-lines">
+              <div class="skeleton-line pulse" style="width: 70%"></div>
+              <div class="skeleton-line pulse" style="width: 45%"></div>
+            </div>
+          </div>
+        }
       </div>
+    } @placeholder {
+      <div class="recipe-list-placeholder" aria-hidden="true"></div>
     }
   </div>
 </div>

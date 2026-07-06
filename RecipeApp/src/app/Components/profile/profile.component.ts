@@ -1,16 +1,16 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
   OnInit,
   inject,
   signal,
+  computed,
   effect,
 } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs/operators';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 
 import { AuthService } from '../../Services/auth.service';
 import { ProfileService, UserProfile } from '../../Services/profile.service';
@@ -30,19 +30,23 @@ export class ProfileComponent implements OnInit {
   private readonly profileService = inject(ProfileService);
   private readonly store = inject(Store<AppState>);
   private readonly toastService = inject(ToastService);
-  private readonly destroyRef = inject(DestroyRef);
 
-  readonly userId = signal<string>('');
-  readonly userToken = signal<string>('');
-  readonly userEmail = signal<string>('');
+  // toSignal() replaces manual subscribe lifecycle — cleaned up automatically
+  private readonly authUser = toSignal(
+    this.store.select('auth').pipe(map((s) => s.user)),
+    { initialValue: null }
+  );
 
-  // Form Fields
+  readonly userId = computed(() => this.authUser()?.id ?? '');
+  readonly userEmail = computed(() => this.authUser()?.email ?? '');
+  readonly userToken = computed(() => this.authUser()?.token ?? '');
+
+  // Form Fields (writable signals)
   readonly firstName = signal<string>('');
   readonly lastName = signal<string>('');
   readonly newPassword = signal<string>('');
   readonly showPassword = signal<boolean>(false);
 
-  // Food Preferences list
   readonly availablePreferences = [
     'Vegetarian',
     'Vegan',
@@ -56,7 +60,7 @@ export class ProfileComponent implements OnInit {
   readonly selectedPreferences = signal<string[]>([]);
 
   constructor() {
-    // Populate form fields when database profile is loaded
+    // Sync loaded database profile into form fields
     effect(() => {
       const profile = this.profileService.currentProfile();
       if (profile) {
@@ -68,31 +72,18 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Fetch active user details from Auth store state
-    this.store
-      .select('auth')
-      .pipe(
-        map((authState) => authState.user),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe((user) => {
-        if (user) {
-          this.userId.set(user.id);
-          this.userEmail.set(user.email);
-          this.userToken.set(user.token || '');
-          this.profileService.loadProfile(user.id);
-        }
-      });
+    const id = this.userId();
+    if (id) {
+      this.profileService.loadProfile(id);
+    }
   }
 
   onTogglePreference(preference: string): void {
-    this.selectedPreferences.update((prefs) => {
-      if (prefs.includes(preference)) {
-        return prefs.filter((p) => p !== preference);
-      } else {
-        return [...prefs, preference];
-      }
-    });
+    this.selectedPreferences.update((prefs) =>
+      prefs.includes(preference)
+        ? prefs.filter((p) => p !== preference)
+        : [...prefs, preference]
+    );
   }
 
   onToggleShowPassword(): void {
@@ -109,17 +100,15 @@ export class ProfileComponent implements OnInit {
       foodPreferences: this.selectedPreferences(),
     };
 
-    // Save profile settings to json-server database
     this.profileService.saveProfile(profileData);
 
-    // If new password is provided, trigger update through AuthService
     if (this.newPassword().trim().length >= 6) {
       this.authService.updatePassword(this.userToken(), this.newPassword()).subscribe({
         next: () => {
           this.toastService.show('Password updated successfully!', 'success');
           this.newPassword.set('');
         },
-        error: (err) => {
+        error: (err: string) => {
           this.toastService.show(err || 'Failed to update password.', 'error');
         },
       });

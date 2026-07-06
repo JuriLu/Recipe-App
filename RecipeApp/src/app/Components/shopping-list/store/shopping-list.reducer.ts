@@ -1,11 +1,11 @@
-import {IngredientModel} from "../../../Models/ingredient.model";
-import * as ShoppingListActions from "./shopping-list.actions";
-
+import { createReducer, on } from '@ngrx/store';
+import { IngredientModel } from '../../../Models/ingredient.model';
+import * as ShoppingListActions from './shopping-list.actions';
 
 export interface SLState {
   ingredients: IngredientModel[];
-  editedIngredient: IngredientModel;
-  editedIngredientIndex: number
+  editedIngredient: IngredientModel | null;
+  editedIngredientIndex: number;
 }
 
 const initialState: SLState = {
@@ -14,69 +14,54 @@ const initialState: SLState = {
     new IngredientModel('Pomodorini', 50),
   ],
   editedIngredient: null,
-  editedIngredientIndex: -1
-}
+  editedIngredientIndex: -1,
+};
 
-export function shoppingListReducer(
-  state: SLState = initialState,
-  action: ShoppingListActions.SHLATypes
-) {
-  switch (action.type) {
+export const shoppingListReducer = createReducer(
+  initialState,
 
-    case ShoppingListActions.ADD_INGREDIENT:
-      return {
-        ...state, //always needed bcs we have more than just ingredients state or editedIngredient ect...
-        ingredients: [...state.ingredients, action.payload]
-      };
+  on(ShoppingListActions.addIngredient, (state, { payload }) => ({
+    ...state,
+    ingredients: [...state.ingredients, payload],
+  })),
 
-    case ShoppingListActions.ADD_INGREDIENTS:
-      return {
-        ...state,//always needed bcs we have more than just ingredients state or editedIngredient ect...
-        ingredients: [...state.ingredients, ...action.payload]   // ...action.payload because we want to add the elements of the array no the whole array
-      };
+  on(ShoppingListActions.addIngredients, (state, { payload }) => ({
+    ...state,
+    ingredients: [...state.ingredients, ...payload],
+  })),
 
-    case ShoppingListActions.UPDATE_INGREDIENT:
-      const ingredient = state.ingredients[state.editedIngredientIndex] // this is the ingredient we want to edit
-      const updatedIngredient = {
-        ...ingredient,
-        ...action.payload
-      }
-      const updatedIngredients = [...state.ingredients];
-      updatedIngredients[state.editedIngredientIndex] = updatedIngredient
+  on(ShoppingListActions.updateIngredient, (state, { payload }) => {
+    const updatedIngredients = [...state.ingredients];
+    updatedIngredients[state.editedIngredientIndex] = {
+      ...state.ingredients[state.editedIngredientIndex],
+      ...payload,
+    };
+    return {
+      ...state,
+      ingredients: updatedIngredients,
+      editedIngredient: null,
+      editedIngredientIndex: -1,
+    };
+  }),
 
-      return {
-        ...state, //always needed bcs we have more than just ingredients state or editedIngredient ect...
-        ingredients: updatedIngredients,
-        editedIngredient: null,
-        editedIngredientIndex: -1
-      };
+  on(ShoppingListActions.deleteIngredient, (state) => ({
+    ...state,
+    ingredients: state.ingredients.filter(
+      (_, idx) => idx !== state.editedIngredientIndex
+    ),
+    editedIngredient: null,
+    editedIngredientIndex: -1,
+  })),
 
-    case ShoppingListActions.DELETE_INGREDIENT:
-      return {
-        ...state,
-        ingredients: state.ingredients.filter((ig, igIndex) => {    //filter function return a new array of its elements if the condition returns true
-          return igIndex !== state.editedIngredientIndex;                                            //The condition
-        }),
-        editedIngredient: null,
-        editedIngredientIndex: -1
-      };
+  on(ShoppingListActions.startEdit, (state, { payload }) => ({
+    ...state,
+    editedIngredientIndex: payload,
+    editedIngredient: { ...state.ingredients[payload] },
+  })),
 
-    case ShoppingListActions.START_EDIT:
-      return {
-        ...state,//always needed bcs we have more than just ingredients state or editedIngredient ect...
-      editedIngredientIndex : action.payload,
-      editedIngredient: {...state.ingredients[action.payload]}   //{...} reference type issue in this case
-      }
-
-    case ShoppingListActions.STOP_EDIT:
-      return {
-        ...state,
-        editedIngredient: null,
-        editedIngredientIndex: -1
-      }
-
-    default:
-      return state;
-  }
-
-}
+  on(ShoppingListActions.stopEdit, (state) => ({
+    ...state,
+    editedIngredient: null,
+    editedIngredientIndex: -1,
+  }))
+);

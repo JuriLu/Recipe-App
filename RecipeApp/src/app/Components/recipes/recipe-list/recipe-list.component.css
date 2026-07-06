@@ -29,3 +29,53 @@
   font-size: 15px;
   font-weight: 500;
 }
+
+/* Skeleton loading states for @defer */
+.recipe-list-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fib-8);
+}
+
+.skeleton-card {
+  display: flex;
+  align-items: center;
+  gap: var(--fib-13);
+  padding: var(--fib-13);
+  border-radius: var(--fib-8);
+}
+
+.skeleton-img {
+  width: 65px;
+  height: 65px;
+  border-radius: var(--fib-8);
+  background: rgba(255,255,255,0.06);
+  flex-shrink: 0;
+}
+
+.skeleton-lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fib-5);
+  flex: 1;
+}
+
+.skeleton-line {
+  height: 12px;
+  border-radius: var(--fib-5);
+  background: rgba(255,255,255,0.06);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.9; }
+}
+
+.pulse {
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.recipe-list-placeholder {
+  min-height: 80px;
+}
+

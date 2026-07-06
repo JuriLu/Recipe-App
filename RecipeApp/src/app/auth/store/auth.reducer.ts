@@ -1,33 +1,23 @@
-import {User} from "../../Models/user.model";
-import * as AUActions from "./auth.actions";
+import { createReducer, on } from '@ngrx/store';
+import { User } from '../../Models/user.model';
+import * as AuthActions from './auth.actions';
 
 export interface AUState {
-  user: User
+  user: User | null;
 }
 
 const initialState: AUState = {
-  user: null
-}
+  user: null,
+};
 
-export function authReducer(state: AUState = initialState, action: AUActions.AuthActions) {
-  switch (action.type) {
-    case AUActions.LOGIN:
-      const user = new User(
-        action.payload.email,
-        action.payload.userId,
-        action.payload.token,
-        action.payload.expirationDate
-      )
-      return {
-        ...state,
-        user   // user:user
-      }
-    case AUActions.LOGOUT:
-      return {
-        ...state,
-        user: null
-      }
-    default:
-      return state
-  }
-}
+export const authReducer = createReducer(
+  initialState,
+  on(AuthActions.login, (state, { email, userId, token, expirationDate }) => ({
+    ...state,
+    user: new User(email, userId, token, expirationDate),
+  })),
+  on(AuthActions.logout, (state) => ({
+    ...state,
+    user: null,
+  }))
+);
