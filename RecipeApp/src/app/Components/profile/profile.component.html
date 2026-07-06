@@ -1,0 +1,104 @@
+<main class="profile-wrapper" aria-label="Profile Settings" i18n-aria-label="@@profileMainAriaLabel">
+  <div class="profile-card glass-panel">
+    
+    <div class="profile-header">
+      <span class="profile-large-avatar">👤</span>
+      <h2 class="profile-title" i18n="@@profileSettingsTitle">Profile Settings</h2>
+      <p class="profile-subtitle" i18n="@@profileSettingsSubtitle">Update your identity, credentials, and culinary preferences</p>
+    </div>
+
+    <form #profileForm="ngForm" (ngSubmit)="onSaveProfile(profileForm)" class="profile-form">
+      
+      <div class="form-row-grid">
+        <div class="form-group">
+          <label for="firstName" i18n="@@profileFirstNameLabel">First Name</label>
+          <input
+            type="text"
+            id="firstName"
+            class="form-control"
+            [ngModel]="firstName()"
+            (ngModelChange)="firstName.set($event)"
+            name="firstName"
+            placeholder="First name"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="lastName" i18n="@@profileLastNameLabel">Last Name</label>
+          <input
+            type="text"
+            id="lastName"
+            class="form-control"
+            [ngModel]="lastName()"
+            (ngModelChange)="lastName.set($event)"
+            name="lastName"
+            placeholder="Last name"
+            required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email" i18n="@@profileEmailLabel">Email Address</label>
+        <input
+          type="email"
+          id="email"
+          class="form-control read-only-input"
+          [ngModel]="userEmail()"
+          name="email"
+          disabled
+          readonly>
+      </div>
+
+      <div class="form-group password-group">
+        <label for="password" i18n="@@profilePasswordLabel">Update Password</label>
+        <div class="password-input-wrapper">
+          <input
+            [type]="showPassword() ? 'text' : 'password'"
+            id="password"
+            class="form-control"
+            [ngModel]="newPassword()"
+            (ngModelChange)="newPassword.set($event)"
+            name="password"
+            minlength="6"
+            placeholder="•••••• (Min 6 chars to update)">
+          
+          <button
+            type="button"
+            class="btn-toggle-password"
+            (click)="onToggleShowPassword()"
+            [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'">
+            {{ showPassword() ? '👁️' : '👁️‍🗨️' }}
+          </button>
+        </div>
+      </div>
+
+      <section class="preferences-section">
+        <h3 class="preferences-title" i18n="@@profilePreferencesTitle">Food & Dietary Preferences</h3>
+        
+        <div class="preferences-grid">
+          @for (pref of availablePreferences; track pref) {
+            <button
+              type="button"
+              class="preference-chip"
+              [class.selected]="selectedPreferences().includes(pref)"
+              (click)="onTogglePreference(pref)">
+              <span class="chip-status">{{ selectedPreferences().includes(pref) ? '✓' : '+' }}</span>
+              <span class="chip-text">{{ pref }}</span>
+            </button>
+          }
+        </div>
+      </section>
+
+      <div class="profile-actions">
+        <button
+          type="submit"
+          class="btn btn-success btn-block btn-save"
+          [disabled]="!profileForm.valid"
+          i18n="@@profileSaveButton">
+          Save Settings
+        </button>
+      </div>
+
+    </form>
+  </div>
+</main>

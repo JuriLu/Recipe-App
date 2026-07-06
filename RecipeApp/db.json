@@ -48,5 +48,18 @@
         }
       ]
     }
-  ]
+  ],
+  "profiles": [
+    {
+      "userId": "bym6ts3XzFM3MLUrBvStR8fwByp1",
+      "firstName": "Jurgen",
+      "lastName": "Lubonja",
+      "foodPreferences": [
+        "Vegetarian",
+        "Vegan"
+      ],
+      "id": "VmCV1oZoTjE"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

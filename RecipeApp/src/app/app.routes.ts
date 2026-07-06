@@ -16,4 +16,9 @@ export const appRoutes: Routes = [
     loadComponent: () => import('./Components/shopping-list/shopping-list.component').then((m) => m.ShoppingListComponent),
     canActivate: [authGuard],
   },
+  {
+    path: 'profile',
+    loadComponent: () => import('./Components/profile/profile.component').then((m) => m.ProfileComponent),
+    canActivate: [authGuard],
+  },
 ];

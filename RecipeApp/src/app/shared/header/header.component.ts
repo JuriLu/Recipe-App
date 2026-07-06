@@ -14,7 +14,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../Services/auth.service';
 import { RecipeService } from '../../Services/recipe.service';
 import { AppState } from '../../store/app.reducer';
-import { DropdownDirective } from '../dropdown.directive';
+
 
 @Component({
   standalone: true,
@@ -22,7 +22,7 @@ import { DropdownDirective } from '../dropdown.directive';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, RouterLinkActive, DropdownDirective],
+  imports: [RouterLink, RouterLinkActive],
 })
 export class HeaderComponent implements OnInit {
   readonly collapsed = signal(true);
@@ -50,14 +50,5 @@ export class HeaderComponent implements OnInit {
 
   onLogout(): void {
     this.authService.logout();
-  }
-
-  onSaveData(): void {
-    // With local json-server and NgRx effects, CRUD operations auto-save instantly.
-    console.log('Recipes are auto-saved to json-server upon modification.');
-  }
-
-  onFetchData(): void {
-    this.recipeService.fetchRecipes();
   }
 }

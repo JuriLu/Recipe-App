@@ -133,6 +133,19 @@ export class AuthService {
 
   }
 
+  updatePassword(idToken: string, newPassword: string): Observable<any> {
+    return this.http.post<any>(
+      `https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDQOIHYCX0homh4OBJk1ZBnsxNiGbTMVBc`,
+      {
+        idToken: idToken,
+        password: newPassword,
+        returnSecureToken: true
+      }
+    ).pipe(
+      catchError(this.handelError.bind(this))
+    );
+  }
+
 
   private handelError(errorRes: HttpErrorResponse) {
     let errorMessage = 'Unknown Error Ocurred'
