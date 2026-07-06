@@ -1,5 +1,15 @@
-<main class="row" aria-label="Authentication" i18n-aria-label="@@authMainAriaLabel">
-  <section class="col-xs-12 col-md-6 col-md-offset-3">
+<main class="auth-wrapper" aria-label="Authentication" i18n-aria-label="@@authMainAriaLabel">
+  <div class="auth-card glass-panel">
+    
+    <div class="auth-header">
+      <img src="/assets/logo.png" alt="Recipe Book Logo" class="auth-logo">
+      <h2 class="auth-title">
+        {{ isLoginMode() ? 'Welcome Back' : 'Create Account' }}
+      </h2>
+      <p class="auth-subtitle" i18n="@@authCardSubtitle">
+        {{ isLoginMode() ? 'Sign in to access your custom recipe collection' : 'Sign up to discover and save recipes' }}
+      </p>
+    </div>
 
     @if (error()) {
       <app-alert
@@ -9,7 +19,7 @@
     }
 
     @if (isLoading()) {
-      <div style="text-align: center" role="status" aria-label="Loading" i18n-aria-label="@@authLoadingAriaLabel">
+      <div class="spinner-container" role="status" aria-label="Loading" i18n-aria-label="@@authLoadingAriaLabel">
         <app-loading-spinner></app-loading-spinner>
       </div>
     } @else {
@@ -17,10 +27,11 @@
         #authForm="ngForm"
         (ngSubmit)="onSubmit(authForm)"
         aria-label="Login or sign up form"
-        i18n-aria-label="@@authFormAriaLabel">
+        i18n-aria-label="@@authFormAriaLabel"
+        class="auth-form">
 
-        <div class="form-group">
-          <label for="email" i18n="@@authEmailLabel">Email</label>
+        <div class="form-group custom-input-group">
+          <label for="email" i18n="@@authEmailLabel">Email Address</label>
           <input
             type="email"
             id="email"
@@ -29,11 +40,12 @@
             name="email"
             required
             email
+            placeholder="name@domain.com"
             autocomplete="email"
             aria-required="true"/>
         </div>
 
-        <div class="form-group">
+        <div class="form-group custom-input-group">
           <label for="password" i18n="@@authPasswordLabel">Password</label>
           <input
             type="password"
@@ -43,31 +55,32 @@
             name="password"
             required
             minlength="6"
+            placeholder="Min 6 characters"
             autocomplete="current-password"
             aria-required="true"/>
         </div>
 
-        <div>
+        <div class="auth-actions">
           <button
-            class="btn btn-primary"
+            class="btn btn-primary btn-block btn-submit"
             type="submit"
             [disabled]="!authForm.valid"
             [attr.aria-label]="isLoginMode() ? 'Login to your account' : 'Create a new account'"
             i18n-aria-label="@@authSubmitAriaLabel">
             {{ isLoginMode() ? 'Login' : 'Sign Up' }}
           </button>
-          |
+          
           <button
-            class="btn btn-primary"
+            class="btn btn-default btn-block btn-switch"
             type="button"
             (click)="onSwitchMode()"
             [attr.aria-label]="isLoginMode() ? 'Switch to Sign Up' : 'Switch to Login'"
             i18n-aria-label="@@authSwitchAriaLabel">
-            Switch to {{ isLoginMode() ? 'Sign Up' : 'Login' }}
+            {{ isLoginMode() ? 'Create an account' : 'Already have an account? Login' }}
           </button>
         </div>
 
       </form>
     }
-  </section>
+  </div>
 </main>

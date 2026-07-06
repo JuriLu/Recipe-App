@@ -1,24 +1,24 @@
-<div class="row">
-  <div class="col-cs-12">
+<div class="recipe-list-wrapper">
+  <div class="recipe-list-header">
     <button
-      class="btn btn-success"
+      class="btn btn-success add-recipe-btn"
       type="button"
       (click)="onNewRecipe()"
       i18n="@@recipeListNewButton">
-      New Recipe
+      + New Recipe
     </button>
   </div>
-</div>
 
-<div class="row mt-2">
-  <div class="col-xs-12" role="list" aria-label="Recipes" i18n-aria-label="@@recipeListAriaLabel">
+  <div class="recipe-list-container" role="list" aria-label="Recipes" i18n-aria-label="@@recipeListAriaLabel">
     @for (recipeEl of recipes(); track recipeEl.name; let i = $index) {
       <app-recipe-item
         [recipe]="recipeEl"
         [index]="i">
       </app-recipe-item>
     } @empty {
-      <p i18n="@@recipeListEmpty">No recipes yet. Click 'New Recipe' to add one!</p>
+      <div class="empty-list glass-panel">
+        <p i18n="@@recipeListEmpty">No recipes found. Click "+ New Recipe" to start cooking!</p>
+      </div>
     }
   </div>
 </div>

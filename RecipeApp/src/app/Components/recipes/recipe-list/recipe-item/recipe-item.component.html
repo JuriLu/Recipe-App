@@ -1,20 +1,23 @@
 <a
-  style="cursor: pointer;"
   [routerLink]="[index()]"
-  routerLinkActive="highlighted"
-  class="list-group-item clearfix gradient__bg_item gradient__bg"
-  style="margin-top: 5px"
+  routerLinkActive="active"
+  class="recipe-card glass-panel"
   [attr.aria-label]="recipe().name"
   role="listitem">
-  <div class="pull-left">
-    <h4 class="list-group-item-heading">{{ recipe().name }}</h4>
-    <p class="list-group-item-heading">{{ recipe().description }}</p>
-  </div>
-  <span class="pull-right">
+  
+  <div class="recipe-card-image-wrapper">
     <img
       [src]="recipe().imagePath"
       [alt]="recipe().name"
-      class="img-responsive"
-      style="max-height: 100px">
-  </span>
+      class="recipe-card-image">
+    <div class="recipe-ingredients-badge">
+      <span class="badge-count">{{ recipe().ingredients.length }}</span>
+      <span class="badge-text" i18n="@@recipeCardBadgeIngs">Ings</span>
+    </div>
+  </div>
+
+  <div class="recipe-card-content">
+    <h4 class="recipe-card-title">{{ recipe().name }}</h4>
+    <p class="recipe-card-desc">{{ recipe().description }}</p>
+  </div>
 </a>

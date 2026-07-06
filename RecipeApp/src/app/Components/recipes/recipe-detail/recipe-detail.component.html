@@ -1,79 +1,71 @@
 @if (recipe(); as r) {
-  <div class="row">
-    <div class="col-xs-12">
+  <article class="recipe-detail glass-panel">
+    
+    <div class="recipe-detail-hero">
       <img
         [src]="r.imagePath"
         [alt]="r.name"
-        class="img-responsive"
-        style="max-height: 300px">
+        class="recipe-detail-image">
+      <div class="recipe-detail-overlay"></div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col-xs-12">
-      <h1>{{ r.name }}</h1>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-xs-12">
-      <div class="btn-group" appDropdown>
-        <button
-          type="button"
-          class="btn btn-primary dropdown-toggle"
-          aria-haspopup="true"
-          aria-expanded="false"
-          aria-label="Manage Recipe"
-          i18n-aria-label="@@recipeDetailManageAriaLabel">
-          <span i18n="@@recipeDetailManageButton">Manage Recipe</span>
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" role="menu">
-          <li role="none">
-            <a
-              style="cursor: pointer"
-              role="menuitem"
-              (click)="onAddToShoppingList()"
-              i18n="@@recipeDetailToShoppingList">To Shopping List</a>
-          </li>
-          <li role="none">
-            <a
-              style="cursor: pointer"
-              role="menuitem"
-              (click)="onEditedRecipe()"
-              i18n="@@recipeDetailEdit">Edit</a>
-          </li>
-          <li role="none">
-            <a
-              style="cursor: pointer"
-              role="menuitem"
-              (click)="onDeleteRecipe()"
-              i18n="@@recipeDetailDelete">Delete</a>
-          </li>
-        </ul>
+    <div class="recipe-detail-body">
+      
+      <div class="recipe-detail-header">
+        <h1 class="recipe-detail-title">{{ r.name }}</h1>
+        
+        <div class="dropdown-container" appDropdown>
+          <button
+            type="button"
+            class="btn btn-primary dropdown-trigger"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-label="Manage Recipe"
+            i18n-aria-label="@@recipeDetailManageAriaLabel">
+            <span i18n="@@recipeDetailManageButton">Actions</span>
+            <span class="caret-select">▾</span>
+          </button>
+          <ul class="dropdown-menu-list glass-panel" role="menu">
+            <li role="none">
+              <a
+                class="dropdown-item"
+                role="menuitem"
+                (click)="onAddToShoppingList()"
+                i18n="@@recipeDetailToShoppingList">To Shopping List</a>
+            </li>
+            <li role="none">
+              <a
+                class="dropdown-item"
+                role="menuitem"
+                (click)="onEditedRecipe()"
+                i18n="@@recipeDetailEdit">Edit</a>
+            </li>
+            <li role="none">
+              <a
+                class="dropdown-item danger"
+                role="menuitem"
+                (click)="onDeleteRecipe()"
+                i18n="@@recipeDetailDelete">Delete</a>
+            </li>
+          </ul>
+        </div>
       </div>
+
+      <p class="recipe-detail-desc">{{ r.description }}</p>
+
+      <section class="recipe-ingredients-section">
+        <h3 class="ingredients-title" i18n="@@recipeDetailIngredientsTitle">Ingredients Required</h3>
+        <ul class="ingredients-list" role="list" aria-label="Ingredients" i18n-aria-label="@@recipeDetailIngredientsAriaLabel">
+          @for (ingredient of r.ingredients; track ingredient.name) {
+            <li class="ingredient-row glass-panel" role="listitem">
+              <span class="ingredient-name">{{ ingredient.name }}</span>
+              <span class="ingredient-amount">{{ ingredient.amount }}</span>
+            </li>
+          }
+        </ul>
+      </section>
+
     </div>
-  </div>
 
-  <br>
-
-  <div class="row">
-    <div class="col-xs-12">
-      <h3>{{ r.description }}</h3>
-    </div>
-  </div>
-
-  <br>
-
-  <div class="row">
-    <div class="col-xs-12">
-      <ul class="list-group" role="list" aria-label="Ingredients" i18n-aria-label="@@recipeDetailIngredientsAriaLabel">
-        @for (ingredient of r.ingredients; track ingredient.name) {
-          <li class="list-group-item gradient__bg" role="listitem">
-            {{ ingredient.name }} &mdash; {{ ingredient.amount }}
-          </li>
-        }
-      </ul>
-    </div>
-  </div>
+  </article>
 }

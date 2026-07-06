@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 
 import { AuthService } from './Services/auth.service';
 import { HeaderComponent } from './shared/header/header.component';
+import { ToastContainerComponent } from './shared/toast/toast-container.component';
 
 @Component({
   standalone: true,
@@ -10,7 +11,7 @@ import { HeaderComponent } from './shared/header/header.component';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [HeaderComponent, RouterOutlet]
+  imports: [HeaderComponent, RouterOutlet, ToastContainerComponent],
 })
 export class AppComponent implements OnInit {
   constructor(private authService: AuthService) {}

@@ -11,8 +11,8 @@ import { Store } from '@ngrx/store';
 import { map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { DataStorageService } from '../../Services/data-storage.service';
 import { AuthService } from '../../Services/auth.service';
+import { RecipeService } from '../../Services/recipe.service';
 import { AppState } from '../../store/app.reducer';
 import { DropdownDirective } from '../dropdown.directive';
 
@@ -30,8 +30,8 @@ export class HeaderComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
 
   constructor(
-    private dataStorageService: DataStorageService,
     private authService: AuthService,
+    private recipeService: RecipeService,
     private store: Store<AppState>,
   ) {}
 
@@ -52,12 +52,11 @@ export class HeaderComponent implements OnInit {
   }
 
   onSaveData(): void {
-    this.dataStorageService.storeRecipes().subscribe((data) => {
-      console.log(data);
-    });
+    // With local json-server and NgRx effects, CRUD operations auto-save instantly.
+    console.log('Recipes are auto-saved to json-server upon modification.');
   }
 
   onFetchData(): void {
-    this.dataStorageService.fetchRecipes().subscribe();
+    this.recipeService.fetchRecipes();
   }
 }

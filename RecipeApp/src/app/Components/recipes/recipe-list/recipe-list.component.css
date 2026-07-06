@@ -1,0 +1,31 @@
+.recipe-list-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fib-21);
+}
+
+.recipe-list-header {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.add-recipe-btn {
+  width: 100%;
+}
+
+.recipe-list-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.empty-list {
+  padding: var(--fib-34);
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.empty-list p {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+}

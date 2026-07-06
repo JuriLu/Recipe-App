@@ -1,0 +1,52 @@
+{
+  "recipes": [
+    {
+      "id": "1",
+      "name": "Pizza Napoletana",
+      "description": "Authentic Italian pizza with fresh mozzarella and basil.",
+      "imagePath": "/assets/pizza.png",
+      "ingredients": [
+        {
+          "name": "Flour",
+          "amount": 500
+        },
+        {
+          "name": "Mozzarella",
+          "amount": 200
+        },
+        {
+          "name": "Tomato Sauce",
+          "amount": 150
+        },
+        {
+          "name": "Basil",
+          "amount": 10
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Classic Spaghetti Carbonara",
+      "description": "Delicious creamy pasta with eggs, pecorino cheese, and pancetta.",
+      "imagePath": "/assets/carbonara.png",
+      "ingredients": [
+        {
+          "name": "Spaghetti",
+          "amount": 250
+        },
+        {
+          "name": "Eggs",
+          "amount": 3
+        },
+        {
+          "name": "Pancetta",
+          "amount": 100
+        },
+        {
+          "name": "Pecorino Romano",
+          "amount": 50
+        }
+      ]
+    }
+  ]
+}

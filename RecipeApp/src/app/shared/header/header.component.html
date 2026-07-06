@@ -1,72 +1,54 @@
-<nav
-  class="navbar navbar-default custom_border gradient__bg"
-  role="navigation"
-  aria-label="Main navigation"
-  i18n-aria-label="@@headerNavAriaLabel">
+<header class="main-header glass-panel">
+  <div class="header-container">
+    
+    <a routerLink="/" class="brand-link" aria-label="Recipe Book home" i18n-aria-label="@@headerBrandAriaLabel">
+      <img src="/assets/logo.png" alt="Recipe Book Logo" class="brand-logo">
+      <span class="brand-title" i18n="@@headerBrandTitle">Recipe Book</span>
+    </a>
 
-  <div class="container-fluid">
-    <div class="navbar-header">
+    <button
+      type="button"
+      class="nav-toggle"
+      [attr.aria-expanded]="!collapsed()"
+      aria-controls="nav-menu"
+      aria-label="Toggle navigation"
+      i18n-aria-label="@@headerToggleNavAriaLabel"
+      (click)="collapsed.set(!collapsed())">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
 
-      <button
-        type="button"
-        class="navbar-toggle"
-        aria-expanded="false"
-        aria-controls="nav-menu"
-        aria-label="Toggle navigation"
-        i18n-aria-label="@@headerToggleNavAriaLabel"
-        (click)="collapsed.set(!collapsed())">
-        @for (iconBar of [1, 2, 3]; track iconBar) {
-          <span class="icon-bar"></span>
-        }
-      </button>
-
-      <a
-        routerLink="/"
-        class="navbar-brand prime zoom"
-        aria-label="Recipe Book home"
-        i18n-aria-label="@@headerBrandAriaLabel"
-        style="margin-left: 1px;">
-        <span>
-          <img
-            src="https://images.unsplash.com/photo-1602934445884-da0fa1c9d3b3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Zm9vZCUyMGxvZ298ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60"
-            alt="Recipe Book Logo"
-            i18n-alt="@@headerLogoAlt"
-            style="width: 30px; height: 30px; border-radius: 10px">
-        </span>
-        <span style="font-size: 23px; margin-left: 5px" i18n="@@headerBrandTitle">Recipe Book</span>
-      </a>
-    </div>
-
-    <div
+    <nav
       id="nav-menu"
-      class="navbar-collapse"
-      [class.collapse]="collapsed()"
-      (window:resize)="collapsed.set(true)">
+      class="nav-menu"
+      [class.active]="!collapsed()"
+      role="navigation">
 
-      <ul class="nav navbar-nav" role="menubar">
+      <ul class="nav-list" role="menubar">
         @if (isAuthenticated()) {
           <li role="none">
             <a
-              routerLinkActive="highlighted"
+              routerLinkActive="active"
               routerLink="/recipes"
-              class="zoom mt-4p"
+              class="nav-link"
               role="menuitem"
               i18n="@@headerRecipesLink">Recipes</a>
           </li>
           <li role="none">
             <a
-              routerLinkActive="highlighted"
+              routerLinkActive="active"
               routerLink="/shopping-list"
-              class="zoom mt-4p"
+              class="nav-link"
               role="menuitem"
               i18n="@@headerShoppingListLink">Shopping List</a>
           </li>
         } @else {
           <li role="none">
             <a
-              routerLinkActive="highlighted"
+              routerLinkActive="active"
               routerLink="/auth"
-              class="zoom mt-4p"
+              class="nav-link"
               role="menuitem">
               <button
                 class="btn btn-sm btn-primary"
@@ -78,47 +60,40 @@
       </ul>
 
       @if (isAuthenticated()) {
-        <ul class="nav navbar-nav navbar-right" role="menubar">
-          <li role="none">
-            <a style="cursor: pointer" role="menuitem">
-              <button
-                class="btn btn-sm btn-danger"
-                type="button"
-                (click)="onLogout()"
-                i18n="@@headerLogoutButton">Logout</button>
-            </a>
-          </li>
-          <li class="dropdown" role="none" appDropdown>
-            <a
-              style="cursor: pointer"
-              class="dropdown-toggle zoom"
-              role="button"
+        <div class="auth-menu">
+          <button
+            class="btn btn-sm btn-danger logout-btn"
+            type="button"
+            (click)="onLogout()"
+            i18n="@@headerLogoutButton">Logout</button>
+          
+          <div class="dropdown-container" appDropdown>
+            <button
+              class="btn btn-sm btn-success dropdown-trigger"
+              type="button"
               aria-haspopup="true"
-              [attr.aria-expanded]="false">
-              <button
-                class="btn btn-sm btn-success"
-                type="button"
-                i18n="@@headerManageButton">Manage <span class="caret"></span></button>
-            </a>
-            <ul class="dropdown-menu" role="menu">
+              i18n="@@headerManageButton">
+              Manage <span class="caret-select">▾</span>
+            </button>
+            <ul class="dropdown-menu-list glass-panel" role="menu">
               <li role="none">
                 <a
-                  style="cursor: pointer"
+                  class="dropdown-item"
                   role="menuitem"
                   (click)="onSaveData()"
                   i18n="@@headerSaveDataItem">Save Data</a>
               </li>
               <li role="none">
                 <a
-                  style="cursor: pointer"
+                  class="dropdown-item"
                   role="menuitem"
                   (click)="onFetchData()"
                   i18n="@@headerFetchDataItem">Fetch Data</a>
               </li>
             </ul>
-          </li>
-        </ul>
+          </div>
+        </div>
       }
-    </div>
+    </nav>
   </div>
-</nav>
+</header>

@@ -1,15 +1,15 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
   inject,
   signal,
 } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router } from '@angular/router';
 import { NgForm, FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 import { AuthResponseData, AuthService } from '../Services/auth.service';
+import { ToastService } from '../Services/toast.service';
 import { AlertComponent } from '../shared/alert/alert.component';
 import { LoadingSpinnerComponent } from '../shared/loading-spinner/loading-spinner.component';
 
@@ -17,6 +17,7 @@ import { LoadingSpinnerComponent } from '../shared/loading-spinner/loading-spinn
   standalone: true,
   selector: 'app-auth',
   templateUrl: './auth.component.html',
+  styleUrls: ['./auth.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule, AlertComponent, LoadingSpinnerComponent],
 })
@@ -25,10 +26,9 @@ export class AuthComponent {
   readonly isLoading = signal(false);
   readonly error = signal<string | null>(null);
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-  ) {}
+  private readonly authService = inject(AuthService);
+  private readonly toastService = inject(ToastService);
+  private readonly router = inject(Router);
 
   onSwitchMode(): void {
     this.isLoginMode.update((v) => !v);
@@ -53,12 +53,17 @@ export class AuthComponent {
     authObs.subscribe({
       next: () => {
         this.isLoading.set(false);
+        this.toastService.show(
+          this.isLoginMode() ? 'Welcome back!' : 'Sign up successful! Welcome!',
+          'success'
+        );
         this.router.navigate(['/recipes']);
       },
       error: (errorMessage: string) => {
         console.log(errorMessage);
         this.error.set(errorMessage);
         this.isLoading.set(false);
+        this.toastService.show(errorMessage, 'error');
       },
     });
 

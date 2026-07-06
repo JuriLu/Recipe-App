@@ -1,127 +1,115 @@
-<div class="row">
-  <div class="col-xs-12">
+<article class="recipe-edit-card glass-panel">
+  <h2 class="recipe-edit-title">
+    {{ editMode() ? 'Edit Recipe' : 'New Recipe' }}
+  </h2>
+  
+  <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()" class="recipe-form">
+    
+    <div class="form-group">
+      <label for="name" i18n="@@recipeEditNameLabel">Recipe Name</label>
+      <input
+        type="text"
+        id="name"
+        formControlName="name"
+        class="form-control"
+        placeholder="e.g., Spicy Arrabiata Pasta"
+        aria-required="true">
+    </div>
 
-    <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="imagePath" i18n="@@recipeEditImageLabel">Recipe Image URL</label>
+      <input
+        type="url"
+        id="imagePath"
+        class="form-control"
+        formControlName="imagePath"
+        placeholder="e.g., https://example.com/pasta.jpg"
+        aria-required="true"
+        #imagePath>
+    </div>
 
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="form-group">
-            <label for="name" i18n="@@recipeEditNameLabel">Name</label>
-            <input
-              type="text"
-              id="name"
-              formControlName="name"
-              class="form-control"
-              aria-required="true">
-          </div>
-        </div>
+    @if (imagePath.value) {
+      <div class="image-preview-wrapper glass-panel">
+        <img [src]="imagePath.value" alt="Recipe image preview" i18n-alt="@@recipeEditImagePreviewAlt" class="image-preview">
       </div>
+    }
 
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="form-group">
-            <label for="imagePath" i18n="@@recipeEditImageLabel">Image Url</label>
-            <input
-              type="url"
-              id="imagePath"
-              class="form-control"
-              formControlName="imagePath"
-              aria-required="true"
-              #imagePath>
-          </div>
-        </div>
-      </div>
+    <div class="form-group">
+      <label for="description" i18n="@@recipeEditDescriptionLabel">Description & Instructions</label>
+      <textarea
+        id="description"
+        class="form-control"
+        formControlName="description"
+        rows="5"
+        placeholder="Describe how to prepare this recipe..."
+        aria-required="true">
+      </textarea>
+    </div>
 
-      <div class="row">
-        <div class="col-xs-12">
-          <img [src]="imagePath.value" alt="Recipe image preview" i18n-alt="@@recipeEditImagePreviewAlt" class="img-responsive">
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="form-group">
-            <label for="description" i18n="@@recipeEditDescriptionLabel">Description</label>
-            <textarea
-              id="description"
-              class="form-control"
-              formControlName="description"
-              rows="6"
-              aria-required="true">
-            </textarea>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-xs-12" formArrayName="ingredients">
-          @for (ingredientCtrl of controls; track $index; let i = $index) {
-            <div
-              class="row"
-              [formGroupName]="i"
-              style="margin-top: 10px">
-
-              <div class="col-xs-8">
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="name"
-                  aria-label="Ingredient name"
-                  i18n-aria-label="@@recipeEditIngredientNameAriaLabel">
-              </div>
-
-              <div class="col-xs-2">
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="amount"
-                  aria-label="Ingredient amount"
-                  i18n-aria-label="@@recipeEditIngredientAmountAriaLabel">
-              </div>
-
-              <div class="col-xs-2">
-                <button
-                  type="button"
-                  class="btn btn-danger"
-                  (click)="onDeleteIng(i)"
-                  aria-label="Delete ingredient"
-                  i18n-aria-label="@@recipeEditDeleteIngAriaLabel">
-                  <span aria-hidden="true">X</span>
-                </button>
-              </div>
+    <section class="ingredients-builder" formArrayName="ingredients">
+      <h3 class="ingredients-builder-title" i18n="@@recipeEditIngredientsBuilderTitle">Recipe Ingredients</h3>
+      
+      <div class="ingredients-rows-container">
+        @for (ingredientCtrl of controls; track $index; let i = $index) {
+          <div
+            class="ingredient-edit-row"
+            [formGroupName]="i">
+            
+            <div class="input-name-col">
+              <input
+                type="text"
+                class="form-control"
+                formControlName="name"
+                placeholder="Ingredient Name"
+                aria-label="Ingredient name"
+                i18n-aria-label="@@recipeEditIngredientNameAriaLabel">
             </div>
-          }
-        </div>
+
+            <div class="input-amount-col">
+              <input
+                type="number"
+                class="form-control"
+                formControlName="amount"
+                placeholder="Qty"
+                aria-label="Ingredient amount"
+                i18n-aria-label="@@recipeEditIngredientAmountAriaLabel">
+            </div>
+
+            <div class="input-delete-col">
+              <button
+                type="button"
+                class="btn btn-danger btn-delete-row"
+                (click)="onDeleteIng(i)"
+                aria-label="Delete ingredient"
+                i18n-aria-label="@@recipeEditDeleteIngAriaLabel">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+          </div>
+        }
       </div>
 
-      <div class="row">
-        <div class="col-xs-12">
-          <button
-            type="button"
-            class="btn btn-success mt-2"
-            (click)="onAddIngredient()"
-            i18n="@@recipeEditAddIngredientButton">
-            Add Ingredient
-          </button>
-        </div>
-      </div>
+      <button
+        type="button"
+        class="btn btn-default add-ingredient-row-btn"
+        (click)="onAddIngredient()"
+        i18n="@@recipeEditAddIngredientButton">
+        + Add Ingredient
+      </button>
+    </section>
 
-      <div class="row mt-2">
-        <div class="col-xs-12">
-          <button
-            type="submit"
-            class="btn btn-success"
-            [disabled]="!recipeForm.valid"
-            i18n="@@recipeEditSaveButton">Save</button>
-          <button
-            type="button"
-            class="btn btn-danger ml-4p"
-            (click)="onCancel()"
-            i18n="@@recipeEditCancelButton">Cancel</button>
-        </div>
-      </div>
+    <div class="form-actions">
+      <button
+        type="submit"
+        class="btn btn-success submit-form-btn"
+        [disabled]="!recipeForm.valid"
+        i18n="@@recipeEditSaveButton">Save Recipe</button>
+      <button
+        type="button"
+        class="btn btn-default cancel-form-btn"
+        (click)="onCancel()"
+        i18n="@@recipeEditCancelButton">Cancel</button>
+    </div>
 
-    </form>
-
-  </div>
-</div>
+  </form>
+</article>

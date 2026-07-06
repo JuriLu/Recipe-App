@@ -5,6 +5,11 @@ import { exhaustMap, map, take } from 'rxjs';
 import * as fromAppReducer from '../store/app.reducer';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  // Do not append auth token for local json-server requests
+  if (req.url.includes('localhost:3000')) {
+    return next(req);
+  }
+
   const store = inject(Store<fromAppReducer.AppState>);
   return store.select('auth').pipe(
     take(1),

@@ -1,57 +1,53 @@
-<div class="row mt-4">
-  <div class="col-xs-12">
-    <form (ngSubmit)="onSubmit(f)" #f="ngForm" aria-label="Shopping item form" i18n-aria-label="@@shoppingEditFormAriaLabel">
-      <div class="row">
+<form (ngSubmit)="onSubmit(f)" #f="ngForm" aria-label="Shopping item form" i18n-aria-label="@@shoppingEditFormAriaLabel" class="shopping-edit-form">
+  <div class="form-inputs-row">
 
-        <div class="col-sm-5 form-group">
-          <label for="name" i18n="@@shoppingEditNameLabel">Name</label>
-          <input
-            type="text"
-            id="name"
-            class="form-control"
-            name="name"
-            ngModel
-            required
-            aria-required="true">
-        </div>
+    <div class="form-group flex-name">
+      <label for="name" i18n="@@shoppingEditNameLabel">Ingredient Name</label>
+      <input
+        type="text"
+        id="name"
+        class="form-control"
+        name="name"
+        placeholder="e.g., Parmigiano"
+        ngModel
+        required
+        aria-required="true">
+    </div>
 
-        <div class="col-sm-2 form-group">
-          <label for="amount" i18n="@@shoppingEditAmountLabel">Amount</label>
-          <input
-            type="number"
-            id="amount"
-            class="form-control"
-            name="amount"
-            ngModel
-            required
-            aria-required="true"
-            [pattern]="'^[1-9]+[0-9]*$'">
-        </div>
+    <div class="form-group flex-amount">
+      <label for="amount" i18n="@@shoppingEditAmountLabel">Amount</label>
+      <input
+        type="number"
+        id="amount"
+        class="form-control"
+        name="amount"
+        placeholder="Qty"
+        ngModel
+        required
+        aria-required="true"
+        [pattern]="'^[1-9]+[0-9]*$'">
+    </div>
 
-      </div>
-
-      <div class="row">
-        <div class="col-xs-12">
-          <button
-            class="btn btn-success"
-            type="submit"
-            [disabled]="!f.valid">
-            {{ editMode() ? 'Update' : 'Add' }}
-          </button>
-          @if (editMode()) {
-            <button
-              class="btn btn-danger ml-2p"
-              type="button"
-              (click)="onDelete()"
-              i18n="@@shoppingEditDeleteButton">Delete</button>
-          }
-          <button
-            class="btn btn-primary ml-2p"
-            (click)="onClear()"
-            type="button"
-            i18n="@@shoppingEditClearButton">Clear</button>
-        </div>
-      </div>
-    </form>
   </div>
-</div>
+
+  <div class="form-buttons-row">
+    <button
+      class="btn btn-primary action-submit-btn"
+      type="submit"
+      [disabled]="!f.valid">
+      {{ editMode() ? 'Update Item' : 'Add Item' }}
+    </button>
+    @if (editMode()) {
+      <button
+        class="btn btn-danger action-delete-btn"
+        type="button"
+        (click)="onDelete()"
+        i18n="@@shoppingEditDeleteButton">Delete</button>
+    }
+    <button
+      class="btn btn-default action-clear-btn"
+      (click)="onClear()"
+      type="button"
+      i18n="@@shoppingEditClearButton">Clear</button>
+  </div>
+</form>

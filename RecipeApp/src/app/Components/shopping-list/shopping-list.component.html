@@ -1,22 +1,25 @@
-<div class="row">
-  <div class="col-xs-10">
-    <app-shopping-edit></app-shopping-edit>
-    <hr>
-    <ul class="list-group" role="list" aria-label="Shopping list ingredients" i18n-aria-label="@@shoppingListIngredientsAriaLabel">
-      @for (ingredient of shoppingList().ingredients; track ingredient.name; let i = $index) {
-        <a
-          class="list-group-item gradient__bg"
-          style="cursor: pointer; margin-top: 5px"
-          role="listitem"
-          [attr.aria-label]="ingredient.name + ', amount ' + ingredient.amount"
-          (click)="onEditItem(i)">
-          {{ ingredient.name }} ({{ ingredient.amount }})
-        </a>
-      } @empty {
-        <li class="list-group-item" role="listitem" i18n="@@shoppingListEmpty">
-          No ingredients in your shopping list yet.
-        </li>
-      }
-    </ul>
+<article class="shopping-list-card glass-panel">
+  <h2 class="shopping-list-title" i18n="@@shoppingListMainTitle">Shopping List</h2>
+  <p class="shopping-list-subtitle" i18n="@@shoppingListSubTitle">Manage your required ingredients for cooking</p>
+  
+  <app-shopping-edit></app-shopping-edit>
+  
+  <hr class="divider">
+
+  <div class="ingredients-list-container" role="list" aria-label="Shopping list ingredients" i18n-aria-label="@@shoppingListIngredientsAriaLabel">
+    @for (ingredient of shoppingList().ingredients; track ingredient.name; let i = $index) {
+      <div
+        class="ingredient-item glass-panel"
+        role="listitem"
+        [attr.aria-label]="ingredient.name + ', amount ' + ingredient.amount"
+        (click)="onEditItem(i)">
+        <span class="ingredient-name">{{ ingredient.name }}</span>
+        <span class="ingredient-amount">{{ ingredient.amount }}</span>
+      </div>
+    } @empty {
+      <div class="empty-list-panel">
+        <p i18n="@@shoppingListEmpty">Your shopping list is empty. Add ingredients from a recipe!</p>
+      </div>
+    }
   </div>
-</div>
+</article>
