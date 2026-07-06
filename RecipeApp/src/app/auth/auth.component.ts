@@ -1,70 +1,71 @@
-import { Component, OnInit } from '@angular/core';
-import {Observable} from "rxjs";
-import {NgForm} from "@angular/forms";
-import {AuthResponseData, AuthService} from "../Services/auth.service";
-import {Router} from "@angular/router";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+  signal,
+} from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { NgForm, FormsModule } from '@angular/forms';
+import { Observable } from 'rxjs';
+
+import { AuthResponseData, AuthService } from '../Services/auth.service';
+import { AlertComponent } from '../shared/alert/alert.component';
+import { LoadingSpinnerComponent } from '../shared/loading-spinner/loading-spinner.component';
 
 @Component({
+  standalone: true,
   selector: 'app-auth',
   templateUrl: './auth.component.html',
-  styleUrls: ['./auth.component.css']
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [FormsModule, AlertComponent, LoadingSpinnerComponent],
 })
-export class AuthComponent implements OnInit {
-  isLoginMode : boolean = true;
-  isLoading : boolean = false;
-  error : string = null;
+export class AuthComponent {
+  readonly isLoginMode = signal(true);
+  readonly isLoading = signal(false);
+  readonly error = signal<string | null>(null);
 
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
-  constructor(private authService : AuthService, private router:Router) { }
-
-  ngOnInit(): void {
+  onSwitchMode(): void {
+    this.isLoginMode.update((v) => !v);
   }
 
-  //(click) that alternates the mode
-  onSwitchMode(){
-    this.isLoginMode = !this.isLoginMode;
-  }
-
-  onSubmit(form:NgForm){
-
-    if (!form.valid){
+  onSubmit(form: NgForm): void {
+    if (!form.valid) {
       return;
     }
-    //Values we get from the user input
-    const email = form.value.email;
-    const password = form.value.password;
 
-    //Observable created to subscribe lated
-    let authObs:Observable<AuthResponseData>
+    const { email, password } = form.value;
+    let authObs: Observable<AuthResponseData>;
 
-    //to show the loading spinner
-    this.isLoading = true;
+    this.isLoading.set(true);
 
-    //Get the alternatives if we are in logging or signup mode based on the user input (click) onSwitchMode()
-    if (this.isLoginMode){
-      authObs = this.authService.login(email,password)
-    }else{
-      authObs = this.authService.signup(email,password)
+    if (this.isLoginMode()) {
+      authObs = this.authService.login(email, password);
+    } else {
+      authObs = this.authService.signup(email, password);
     }
 
-    //subscribe to whichever observable that was from the if else condition
-    authObs.subscribe(
-      (resData) => {
-        this.isLoading = false
-        this.router.navigate(['/recipes'])
+    authObs.subscribe({
+      next: () => {
+        this.isLoading.set(false);
+        this.router.navigate(['/recipes']);
       },
-      errorMessage => {
+      error: (errorMessage: string) => {
         console.log(errorMessage);
-        this.error = errorMessage
-        this.isLoading = false
-      }
-    );
+        this.error.set(errorMessage);
+        this.isLoading.set(false);
+      },
+    });
 
-    form.reset()
+    form.reset();
   }
 
-  onHandleError(){
-    this.error = null
+  onHandleError(): void {
+    this.error.set(null);
   }
-
 }

@@ -1,54 +1,73 @@
-<div class="row">
-  <div class="col-xs-12 col-md-6 col-md-offset-3">
+<main class="row" aria-label="Authentication" i18n-aria-label="@@authMainAriaLabel">
+  <section class="col-xs-12 col-md-6 col-md-offset-3">
 
-    <app-alert
-      *ngIf="error"
-      [message]="error"
-      (close)="onHandleError()"
-    ></app-alert>
+    @if (error()) {
+      <app-alert
+        [message]="error()!"
+        (close)="onHandleError()">
+      </app-alert>
+    }
 
-    <div *ngIf="isLoading" style="text-align: center">
-      <app-loading-spinner></app-loading-spinner>
-    </div>
-
-    <form #authForm='ngForm' (ngSubmit)="onSubmit(authForm)" *ngIf="!isLoading">
-
-      <div class="form-group"  >
-        <label for="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          class="form-control"
-          ngModel
-          name="email"
-          required
-          email/>
+    @if (isLoading()) {
+      <div style="text-align: center" role="status" aria-label="Loading" i18n-aria-label="@@authLoadingAriaLabel">
+        <app-loading-spinner></app-loading-spinner>
       </div>
+    } @else {
+      <form
+        #authForm="ngForm"
+        (ngSubmit)="onSubmit(authForm)"
+        aria-label="Login or sign up form"
+        i18n-aria-label="@@authFormAriaLabel">
 
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          class="form-control"
-          ngModel
-          name="password"
-          required
-          minlength="6"/>
-      </div>
+        <div class="form-group">
+          <label for="email" i18n="@@authEmailLabel">Email</label>
+          <input
+            type="email"
+            id="email"
+            class="form-control"
+            ngModel
+            name="email"
+            required
+            email
+            autocomplete="email"
+            aria-required="true"/>
+        </div>
 
-      <div>
-        <button
-          class="btn btn-primary"
-          type="submit"
-          [disabled]="!authForm.valid"> {{ isLoginMode ? 'Login' : 'Sign Up'}} </button>
-        |
-        <button
-          class="btn btn-primary"
-          type="button"
-          (click)="onSwitchMode()"> Switch to {{ isLoginMode? 'Sign Up' : 'Login'}} </button>
-      </div>
+        <div class="form-group">
+          <label for="password" i18n="@@authPasswordLabel">Password</label>
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            ngModel
+            name="password"
+            required
+            minlength="6"
+            autocomplete="current-password"
+            aria-required="true"/>
+        </div>
 
-    </form>
-  </div>
-</div>
+        <div>
+          <button
+            class="btn btn-primary"
+            type="submit"
+            [disabled]="!authForm.valid"
+            [attr.aria-label]="isLoginMode() ? 'Login to your account' : 'Create a new account'"
+            i18n-aria-label="@@authSubmitAriaLabel">
+            {{ isLoginMode() ? 'Login' : 'Sign Up' }}
+          </button>
+          |
+          <button
+            class="btn btn-primary"
+            type="button"
+            (click)="onSwitchMode()"
+            [attr.aria-label]="isLoginMode() ? 'Switch to Sign Up' : 'Switch to Login'"
+            i18n-aria-label="@@authSwitchAriaLabel">
+            Switch to {{ isLoginMode() ? 'Sign Up' : 'Login' }}
+          </button>
+        </div>
+
+      </form>
+    }
+  </section>
+</main>

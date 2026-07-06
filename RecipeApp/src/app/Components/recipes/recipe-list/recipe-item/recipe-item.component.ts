@@ -1,14 +1,20 @@
-import {Component,Input} from '@angular/core';
-import {RecipeModel} from "../../../../Models/recipe.model";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+} from '@angular/core';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+
+import { RecipeModel } from '../../../../Models/recipe.model';
 
 @Component({
+  standalone: true,
   selector: 'app-recipe-item',
   templateUrl: './recipe-item.component.html',
-  styleUrls: ['./recipe-item.component.css']
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterLink, RouterLinkActive],
 })
 export class RecipeItemComponent {
-  @Input() recipe: RecipeModel;
-  @Input() index: number
-
-
+  readonly recipe = input.required<RecipeModel>();
+  readonly index = input.required<number>();
 }

@@ -1,30 +1,22 @@
-import {Component,OnInit} from '@angular/core';
-import {IngredientModel} from "../../Models/ingredient.model";
-import {Observable} from "rxjs";
-import {Store} from "@ngrx/store";
-import * as ShoppingListActions from "./store/shopping-list.actions"
-import * as fromAppReducer from "../../store/app.reducer"
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Store } from '@ngrx/store';
+import * as ShoppingListActions from './store/shopping-list.actions';
+import * as fromAppReducer from '../../store/app.reducer';
+import { ShoppingEditComponent } from './shopping-edit/shopping-edit.component';
 
 @Component({
+  standalone: true,
   selector: 'app-shopping-list',
   templateUrl: './shopping-list.component.html',
-  styleUrls: ['./shopping-list.component.css']
+  styleUrls: ['./shopping-list.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ShoppingEditComponent]
 })
-export class ShoppingListComponent implements OnInit {
-  ingredients: Observable<{ ingredients: IngredientModel[] }>;
+export class ShoppingListComponent {
+  private readonly store = inject(Store<fromAppReducer.AppState>);
+  readonly shoppingList = this.store.selectSignal(state => state.shoppingList);
 
-  constructor(
-    private store: Store<fromAppReducer.AppState>) {        //NgRx
+  onEditItem(index: number): void {
+    this.store.dispatch(new ShoppingListActions.StartEdit(index));
   }
-
-  ngOnInit(): void {
-    this.ingredients = this.store.select('shoppingList')  // NgRx
-  }
-
-  onEditItem(index: number) {
-    this.store.dispatch(new ShoppingListActions.StartEdit(index)) //NgRx
-  }
-
-
-
 }

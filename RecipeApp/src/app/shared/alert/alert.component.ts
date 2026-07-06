@@ -1,21 +1,21 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
 
 @Component({
+  standalone: true,
   selector: 'app-alert',
   templateUrl: './alert.component.html',
-  styleUrls: ['./alert.component.css']
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AlertComponent implements OnInit {
-  @Input() message:string
-  @Output() close = new EventEmitter<void>();
+export class AlertComponent {
+  readonly message = input.required<string>();
+  readonly close = output<void>();
 
-  onClose(){
-    this.close.emit()
+  onClose(): void {
+    this.close.emit();
   }
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
 }

@@ -1,12 +1,23 @@
 import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideRouter, withPreloading, PreloadAllModules } from '@angular/router';
+import { provideStore } from '@ngrx/store';
 
-import { AppModule } from './app/app.module';
+import { AppComponent } from './app/app.component';
+import { appRoutes } from './app/app.routes';
+import { appReducer } from './app/store/app.reducer';
+import { authInterceptor } from './app/auth/auth.interceptor';
 import { environment } from './environments/environment';
 
 if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.error(err));
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideRouter(appRoutes, withPreloading(PreloadAllModules)),
+    provideHttpClient(withInterceptors([authInterceptor])),
+    provideStore(appReducer),
+  ],
+}).catch((err) => console.error(err));

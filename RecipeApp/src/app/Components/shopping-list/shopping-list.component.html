@@ -2,15 +2,21 @@
   <div class="col-xs-10">
     <app-shopping-edit></app-shopping-edit>
     <hr>
-    <ul class="list-group">
-      <a
-        class="list-group-item gradient__bg"
-        style="cursor:
-        pointer;margin-top: 5px"
-        *ngFor="let ingredient of (ingredients | async).ingredients; let i = index"
-        (click)="onEditItem(i)"
-      >
-        {{ingredient.name}} ({{ingredient.amount}})</a>
+    <ul class="list-group" role="list" aria-label="Shopping list ingredients" i18n-aria-label="@@shoppingListIngredientsAriaLabel">
+      @for (ingredient of shoppingList().ingredients; track ingredient.name; let i = $index) {
+        <a
+          class="list-group-item gradient__bg"
+          style="cursor: pointer; margin-top: 5px"
+          role="listitem"
+          [attr.aria-label]="ingredient.name + ', amount ' + ingredient.amount"
+          (click)="onEditItem(i)">
+          {{ ingredient.name }} ({{ ingredient.amount }})
+        </a>
+      } @empty {
+        <li class="list-group-item" role="listitem" i18n="@@shoppingListEmpty">
+          No ingredients in your shopping list yet.
+        </li>
+      }
     </ul>
   </div>
 </div>

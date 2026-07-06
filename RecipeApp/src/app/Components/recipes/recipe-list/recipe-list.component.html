@@ -1,18 +1,24 @@
 <div class="row">
   <div class="col-cs-12">
-    <button class="btn btn-success" (click)="onNewRecipe()">
+    <button
+      class="btn btn-success"
+      type="button"
+      (click)="onNewRecipe()"
+      i18n="@@recipeListNewButton">
       New Recipe
     </button>
   </div>
 </div>
 
-<div class="row mt-2 " >
-  <div class="col-xs-12">
-    <app-recipe-item
-      *ngFor="let recipeEl of recipes; let i = index"
-      [recipe] = "recipeEl"
-      [index]="i" ></app-recipe-item>
+<div class="row mt-2">
+  <div class="col-xs-12" role="list" aria-label="Recipes" i18n-aria-label="@@recipeListAriaLabel">
+    @for (recipeEl of recipes(); track recipeEl.name; let i = $index) {
+      <app-recipe-item
+        [recipe]="recipeEl"
+        [index]="i">
+      </app-recipe-item>
+    } @empty {
+      <p i18n="@@recipeListEmpty">No recipes yet. Click 'New Recipe' to add one!</p>
+    }
   </div>
 </div>
-
-

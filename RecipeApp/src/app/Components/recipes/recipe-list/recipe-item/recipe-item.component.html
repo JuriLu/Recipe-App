@@ -1,15 +1,20 @@
 <a
   style="cursor: pointer;"
-  [routerLink]="[index]"
+  [routerLink]="[index()]"
   routerLinkActive="highlighted"
   class="list-group-item clearfix gradient__bg_item gradient__bg"
   style="margin-top: 5px"
-   >
+  [attr.aria-label]="recipe().name"
+  role="listitem">
   <div class="pull-left">
-    <h4 class="list-group-item-heading">{{recipe.name}}</h4>
-    <p class="list-group-item-heading">{{recipe.description}}</p>
+    <h4 class="list-group-item-heading">{{ recipe().name }}</h4>
+    <p class="list-group-item-heading">{{ recipe().description }}</p>
   </div>
   <span class="pull-right">
-        <img [src]="recipe.imagePath" alt="{{recipe.name}}" class="img-responsive" style="max-height: 100px">
-      </span>
+    <img
+      [src]="recipe().imagePath"
+      [alt]="recipe().name"
+      class="img-responsive"
+      style="max-height: 100px">
+  </span>
 </a>

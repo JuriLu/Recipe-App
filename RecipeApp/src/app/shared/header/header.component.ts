@@ -1,50 +1,63 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {DataStorageService} from "../../Services/data-storage.service";
-import {AuthService} from "../../Services/auth.service";
-import {map, Subscription} from "rxjs";
-import * as fromAppReducer from "../../store/app.reducer"
-import {Store} from "@ngrx/store";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  OnInit,
+  inject,
+  signal,
+} from '@angular/core';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { map } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+import { DataStorageService } from '../../Services/data-storage.service';
+import { AuthService } from '../../Services/auth.service';
+import { AppState } from '../../store/app.reducer';
+import { DropdownDirective } from '../dropdown.directive';
 
 @Component({
+  standalone: true,
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterLink, RouterLinkActive, DropdownDirective],
 })
-export class HeaderComponent implements OnInit, OnDestroy {
-  collapsed: boolean = true;
-  isAuthenticated: boolean = false;
-  private userSub: Subscription
+export class HeaderComponent implements OnInit {
+  readonly collapsed = signal(true);
+  readonly isAuthenticated = signal(false);
+
+  private readonly destroyRef = inject(DestroyRef);
 
   constructor(
     private dataStorageService: DataStorageService,
     private authService: AuthService,
-    private store: Store<fromAppReducer.AppState>
-  ) {
+    private store: Store<AppState>,
+  ) {}
+
+  ngOnInit(): void {
+    this.store
+      .select('auth')
+      .pipe(
+        map((authState) => authState.user),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((user) => {
+        this.isAuthenticated.set(!!user);
+      });
   }
 
-  ngOnInit() {
-    this.userSub = this.store.select('auth').pipe(map(authState => authState.user)).subscribe(user => {
-      this.isAuthenticated = !!user //!user ? false:true;
-      })
+  onLogout(): void {
+    this.authService.logout();
   }
 
-  onLogout() {
-    this.authService.logout()
+  onSaveData(): void {
+    this.dataStorageService.storeRecipes().subscribe((data) => {
+      console.log(data);
+    });
   }
 
-  onSaveData() {
-    this.dataStorageService.storeRecipes().subscribe((Data) => {
-      console.log(Data)
-    })
+  onFetchData(): void {
+    this.dataStorageService.fetchRecipes().subscribe();
   }
-
-  onFetchData() {
-    this.dataStorageService.fetchRecipes().subscribe()
-  }
-
-  ngOnDestroy() {
-    this.userSub.unsubscribe()
-  }
-
-
 }

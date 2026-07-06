@@ -1,7 +1,24 @@
-<div class="backdrop" (click)="onClose()"></div>
-<div class="alert-box">
-  <p>{{message}}</p>
+<div
+  class="backdrop"
+  role="presentation"
+  (click)="onClose()"
+  aria-hidden="true">
+</div>
+<div
+  class="alert-box"
+  role="alertdialog"
+  aria-live="assertive"
+  aria-modal="true"
+  [attr.aria-label]="message()">
+  <p id="alert-message">{{ message() }}</p>
   <div class="alert-box-actions">
-    <button class="btn btn-primary" (click)="onClose()">Close</button>
+    <button
+      class="btn btn-primary"
+      type="button"
+      aria-describedby="alert-message"
+      i18n="@@alertCloseButton"
+      (click)="onClose()">
+      Close
+    </button>
   </div>
 </div>
